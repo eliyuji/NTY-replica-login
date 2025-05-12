@@ -17,6 +17,11 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.loginButton{
+  background-color: #a1a4dc;
+  color:black;
+}
+
 a {
   font-weight: 500;
   color: #646cff;

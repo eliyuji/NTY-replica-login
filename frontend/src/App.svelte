@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-
+  import { user, logout } from './authenStores';
   interface Article {
     picture: string; /* image url*/  
     title: string;     
@@ -50,6 +50,15 @@
   }
 });
 
+function redirectToDexLogin() {
+  const clientId = 'flask-app';
+  const redirectUri = 'http://localhost:8000/auth/callback';
+  const responseType = 'code';
+  const scope = 'openid email';
+  const dexUrl = `http://localhost:5556/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=${responseType}&scope=${scope}`;
+  window.location.href = dexUrl; // Redirect user to Dex login page
+}
+
 </script>
 
 <!-- Header -->
@@ -59,10 +68,7 @@
   <p>CANADA</p>
   <p>ESPANOL</p>
   <p>中文</p>
-  <!-- Login.svelte -->
-<a href="http://localhost:5556/auth?client_id=svelte-app&redirect_uri=http://localhost:5173/callback&response_type=code&scope=openid email profile">
-  SIGN IN HERE
-</a>
+  <button class= "loginButton" on:click={redirectToDexLogin}>Login</button>
  </div>
 <header class="header">
   <div class="dateTime" id="dateTime">{new Date().toLocaleDateString()} 

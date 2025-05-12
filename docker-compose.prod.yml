@@ -32,7 +32,7 @@ services:
       - .env
       - .env.prod
     entrypoint: ["/bin/sh", "-c"]
-    command: ["envsubst < /etc/dex/dex.yaml > /etc/dex/dex_final.yaml && dex serve /etc/dex/dex_final.yaml"]
+    command: ["sh", "-c", "envsubst < /etc/dex/dex.yaml > /etc/dex/dex_final.yaml && dex serve /etc/dex/dex_final.yaml"]
 
 volumes:
   mongo_data:

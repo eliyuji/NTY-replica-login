@@ -38,10 +38,11 @@ services:
       - .env.dev
     volumes:
       - mongo_data:/data/db
-      #- ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js  # Mount the init script here
+      - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js  # Mount the init script here
 
   dex:
-    image: ghcr.io/dexidp/dex:v2.37.0
+    build:
+      context: ./config/dex
     container_name: dex
     volumes:
       - ./config/dex:/etc/dex
@@ -52,8 +53,10 @@ services:
     env_file:
       - .env
       - .env.dev
+
     entrypoint: ["/bin/sh", "-c"]
-    command: ["envsubst < /etc/dex/dex.yaml > /etc/dex/dex_final.yaml && dex serve /etc/dex/dex_final.yaml"]
+    command:
+        ["envsubst < /etc/dex/dex.yaml > /etc/dex/dex_final.yaml && dex serve /etc/dex/dex_final.yaml"]
 
 volumes:
   mongo_data:

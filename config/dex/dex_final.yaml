@@ -1,0 +1,31 @@
+issuer: http://localhost:5556
+
+# Storage configuration to use MongoDB
+storage:
+  type: mongo
+  config:
+    uri: mongodb://root:rootpassword@mongo:27017/mydatabase?authSource=admin  # Use environment variable MONGO_URI from Docker Compose
+    collection: dex  # Optional: collection name for storing Dex data
+
+web:
+  http: 0.0.0.0:5556
+
+staticClients:
+  - id: flask-app
+    redirectURIs:
+      - http://localhost:8000/auth/callback
+    name: Flask App
+    secret: flask-secret
+
+enablePasswordDB: true
+
+# Can create passwords using python
+#python -c "import bcrypt; print(bcrypt.hashpw(b'password', bcrypt.gensalt()).decode())"
+staticPasswords:
+ - email: alice@example.com
+   hash: "$2a$10" # password = "password"
+   username: alice
+   userID: "123"
+#debugging bleh
+oauth2:
+  skipApprovalScreen: true

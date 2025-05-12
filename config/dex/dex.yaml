@@ -20,12 +20,12 @@ staticClients:
 enablePasswordDB: true
 
 # Can create passwords using python
-# python -c "import bcrypt; print(bcrypt.hashpw(b'password', bcrypt.gensalt()).decode())"
-#staticPasswords:
-#  - email: alice@example.com
-#    hash: "$2a$10$CwTycUXWue0Thq9StjUM0uJ8DPLKXt1FYlwYpQW2G3cAwjKoh2WZK" # password = "password"
-#    username: alice
-#    userID: "123"
-
+#python -c "import bcrypt; print(bcrypt.hashpw(b'password', bcrypt.gensalt()).decode())"
+staticPasswords:
+ - email: alice@example.com
+   hash: "$2a$10$CwTycUXWue0Thq9StjUM0uJ8DPLKXt1FYlwYpQW2G3cAwjKoh2WZK" # password = "password"
+   username: alice
+   userID: "123"
+#debugging bleh
 oauth2:
   skipApprovalScreen: true
