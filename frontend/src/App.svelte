@@ -10,11 +10,14 @@
   let apiKey: string = '';
   let catalog: Article[] = [];
   let loading = true;
+  let isLoggedIn = false;
 
   /*manually assigning articles into column for easier manipulation in different device modes*/
   let c1: Article[] = [];
   let c2: Article[] = [];
   let c3: Article[] = [];
+
+
 
   onMount(async () => {
   try {
@@ -42,6 +45,20 @@
     else if(i%3 == 1) c2.push(article)
     else if(i%3 == 2) c3.push(article)
   });
+
+  const userRes = await fetch('http://localhost:8000/auth/user', {
+  credentials: 'include'
+    });
+  const datap = await userRes.json();
+  console.log(userRes.status, datap);
+  
+    if (userRes.status === 200) {
+      console.log("User is logged in");
+      isLoggedIn = true;
+    } else {
+      console.log("User is not logged in");
+      isLoggedIn = false;
+    }
   } catch (error) {
     console.error('Failed to fetch API key or articles:', error);
   } finally {
@@ -70,7 +87,11 @@ function userLogout() {
   <p>CANADA</p>
   <p>ESPANOL</p>
   <p>中文</p>
-  <button class= "loginButton" on:click={redirectToDexLogin}>Login</button>
+  {#if isLoggedIn}
+    <button class="loginButton" on:click={userLogout}>Logout</button>
+  {:else}
+    <button class="loginButton" on:click={redirectToDexLogin}>Login</button>
+  {/if}
  </div>
 <header class="header">
   <div class="dateTime" id="dateTime">{new Date().toLocaleDateString()} 

@@ -4,6 +4,7 @@ from flask_cors import CORS
 from pymongo import MongoClient
 import requests
 import logging
+import secrets
 
 static_path = os.getenv('STATIC_PATH','static')
 template_path = os.getenv('TEMPLATE_PATH','templates')
@@ -19,10 +20,9 @@ reDirect = 'http://localhost:8000/auth/callback'
 DEX_TOKEN_URL = 'http://dex:5556/token'
 DEX_USERINFO_URL = 'http://dex:5556/userinfo'
 
-
 app = Flask(__name__, static_folder=static_path, template_folder=template_path)
-app.secret_key = 'secretKeyTester'
-CORS(app)
+app.secret_key = secrets.token_hex(16)
+CORS(app, supports_credentials=True, resources={r"/*": {"origins": "http://localhost:5173"}})
 
 @app.route('/api/key')
 def get_key():
@@ -38,16 +38,24 @@ def serve_frontend(path=''):
 @app.route("/test-mongo")
 def test_mongo():
     return jsonify({"collections": db.list_collection_names()})
+
 @app.route("/auth/user")
 def get_logged_in_user():
     user = session.get('user')
-    if user:
-        return jsonify(user)
-    return jsonify({"user": None}), 401
+    app.logger.debug(f"Session user: {user}")  # Log the session state
+
+    # Explicitly check if the session is empty and return 401 if no user is logged in
+    if user is None:
+        app.logger.debug("No user found in session.")
+        return jsonify({"user": None}), 401
+    return jsonify(user)
 @app.route("/logout")
 def logout():
     session.clear()
-    return redirect("http://localhost:5173")
+    response = redirect("http://localhost:5173")
+    response.set_cookie('session', '', expires=0)
+    return response
+
 @app.route("/auth/callback")
 def auth_callback():
     try:
