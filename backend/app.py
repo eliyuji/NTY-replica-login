@@ -33,6 +33,8 @@ def get_key():
 def serve_frontend(path=''):
     if path != '' and os.path.exists(os.path.join(static_path,path)):
         return send_from_directory(static_path, path)
+    if path == 'login.html':
+        return send_from_directory(static_path, 'login.html')
     return send_from_directory(template_path, 'index.html')
 
 @app.route("/test-mongo")

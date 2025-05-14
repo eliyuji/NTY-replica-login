@@ -46,7 +46,7 @@
     else if(i%3 == 2) c3.push(article)
   });
 
-  const userRes = await fetch('http://localhost:8000/auth/user', {
+  /*const userRes = await fetch('http://localhost:8000/auth/user', {
   credentials: 'include'
     });
   const datap = await userRes.json();
@@ -58,7 +58,7 @@
     } else {
       console.log("User is not logged in");
       isLoggedIn = false;
-    }
+    }*/
   } catch (error) {
     console.error('Failed to fetch API key or articles:', error);
   } finally {
@@ -87,11 +87,14 @@ function userLogout() {
   <p>CANADA</p>
   <p>ESPANOL</p>
   <p>中文</p>
-  {#if isLoggedIn}
+  <!--{#if isLoggedIn}
     <button class="loginButton" on:click={userLogout}>Logout</button>
   {:else}
     <button class="loginButton" on:click={redirectToDexLogin}>Login</button>
-  {/if}
+  {/if}-->
+  <button class="loginButton" on:click={() => window.location.href = '/login.html'}>
+    Login
+  </button>
  </div>
 <header class="header">
   <div class="dateTime" id="dateTime">{new Date().toLocaleDateString()} 

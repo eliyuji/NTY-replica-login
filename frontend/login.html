@@ -1,0 +1,35 @@
+<!-- public/login.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Login Page</title>
+  <link rel="stylesheet" href="/login.css" />
+</head>
+<body>
+    <div class="container">
+        <h1 class="logo">The New York Times</h1>
+        <h1>Log in or create an account</h1>
+    
+        <form class="login-form">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" placeholder="you@example.com" required />
+          <button type="submit" class="primary-btn">Continue</button>
+        </form>
+    
+        <div class="separator">
+          <span>or</span>
+        </div>
+    
+        <div class="oauth-buttons">
+          <button class="oauth google">Continue with Google</button>
+          <button class="oauth facebook">Continue with Facebook</button>
+          <button class="oauth apple">Continue with Apple</button>
+        </div>
+    
+        <p class="sso-link">
+          <a href="#">Continue with work or school single sign-on &gt;</a>
+        </p>
+      </div>
+    </body>
+</html>
