@@ -2,10 +2,10 @@ issuer: http://localhost:5556
 
 # Storage configuration to use MongoDB
 storage:
-  type: mongo
-  config:
-    uri: mongodb://root:rootpassword@mongo:27017/mydatabase?authSource=admin  # Use environment variable MONGO_URI from Docker Compose
-    collection: dex  # Optional: collection name for storing Dex data
+  type: memory
+  #config:
+    #uri: mongodb://root:rootpassword@mongo:27017/mydatabase?authSource=admin  # Use environment variable MONGO_URI from Docker Compose
+    #collection: dex  # Optional: collection name for storing Dex data
 
 web:
   http: 0.0.0.0:5556
@@ -23,9 +23,9 @@ enablePasswordDB: true
 #python -c "import bcrypt; print(bcrypt.hashpw(b'password', bcrypt.gensalt()).decode())"
 staticPasswords:
  - email: alice@example.com
-   hash: "$2a$10" # password = "password"
+   hash: $2a$12$m1RcGHqSbXwmcfe/2HjLweSiOnPiS73LvpXul4x5xMt0cWRRSm7oS # password = "password"
    username: alice
    userID: "123"
-#debugging bleh
+#debugging blehboo
 oauth2:
   skipApprovalScreen: true

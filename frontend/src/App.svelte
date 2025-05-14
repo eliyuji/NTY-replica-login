@@ -1,6 +1,5 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { user, logout } from './authenStores';
   interface Article {
     picture: string; /* image url*/  
     title: string;     
@@ -57,6 +56,9 @@ function redirectToDexLogin() {
   const scope = 'openid email';
   const dexUrl = `http://localhost:5556/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=${responseType}&scope=${scope}`;
   window.location.href = dexUrl; // Redirect user to Dex login page
+}
+function userLogout() {
+  window.location.href = "http://localhost:8000/logout";
 }
 
 </script>
