@@ -5,6 +5,9 @@ from pymongo import MongoClient
 import requests
 import logging
 import secrets
+from datetime import datetime
+from bson.objectid import ObjectId
+
 
 static_path = os.getenv('STATIC_PATH','static')
 template_path = os.getenv('TEMPLATE_PATH','templates')
@@ -20,6 +23,8 @@ reDirect = 'http://localhost:8000/auth/callback'
 DEX_TOKEN_URL = 'http://dex:5556/token'
 DEX_USERINFO_URL = 'http://dex:5556/userinfo'
 
+NYT_API_KEY = os.getenv("NYT_API_KEY")
+
 app = Flask(__name__, static_folder=static_path, template_folder=template_path)
 app.secret_key = secrets.token_hex(16)
 CORS(app, supports_credentials=True, resources={r"/*": {"origins": "http://localhost:5173"}})
@@ -27,6 +32,20 @@ CORS(app, supports_credentials=True, resources={r"/*": {"origins": "http://local
 @app.route('/api/key')
 def get_key():
     return jsonify({'apiKey': os.getenv('NYT_API_KEY')})
+
+@app.route("/api/articles")
+def get_articles():
+    query = request.args.get("q", "Sacramento AND Davis")  
+    url = f"https://api.nytimes.com/svc/search/v2/articlesearch.json"
+    params = {
+        "q": query,
+        "api-key": NYT_API_KEY
+    }
+    try:
+        res = requests.get(url, params=params)
+        return jsonify(res.json())
+    except Exception as e:
+        return jsonify({"error in apikey "}), 500
 
 @app.route('/')
 @app.route('/<path:path>')
@@ -97,10 +116,72 @@ def auth_callback():
         session['user'] = userinfo
 
         return redirect("http://localhost:5173")
-
     except Exception as e:
         app.logger.exception("Error in /auth/callback")
-        return f"Internal Server Error: {str(e)}", 500
+        return f"error in callback", 500
+
+@app.route("/api/comments", methods=["GET"])
+def get_comments():
+    article_url = request.args.get("url")
+    comments = list(db.comments.find({"article_url": article_url}))
+    for c in comments:
+        c["_id"] = str(c["_id"])
+    return jsonify(comments)
+
+
+@app.route("/api/comments", methods=["POST"])
+def post_comment():
+    user = session.get("user")
+    data = request.json
+    email = user.get("email", "")
+    username = email.split("@")[0]
+
+    comment = {
+        "article_url": data["article_url"],
+        "user": {
+            "id": user.get("sub"),
+            "username": username
+        },
+        "content": data["content"],
+        "timestamp": datetime.now(),
+        "edited": False,
+        "replies": []
+    }
+
+    result = db.comments.insert_one(comment) # https://www.mongodb.com/docs/manual/reference/method/db.collection.insertOne/
+    comment["_id"] = str(result.inserted_id) # 
+
+    return jsonify(comment)
+
+
+
+@app.route("/api/comments/<comment_id>/reply", methods=["POST"])
+def reply_comment(comment_id):
+    user = session.get("user")
+    data = request.json
+    email = user.get("email", "")
+    username = email.split("@")[0]
+    reply = {
+        "user": {
+            "id": user.get("sub"),
+            "username": username
+        },
+        "content": data.get("content", ""),
+        "timestamp": datetime.now()
+    }
+    db.comments.update_one({"_id": ObjectId(comment_id)}, {"$push": {"replies": reply}}) #https://www.mongodb.com/docs/manual/reference/method/db.collection.updateOne/
+    return jsonify({"message": "Reply added"})
+
+
+@app.route("/api/comments/<comment_id>", methods=["DELETE"])
+def delete_comment(comment_id):
+    user = session.get("user")
+    email = user.get("email", "")
+    username = email.split("@")[0]
+    db.comments.delete_one({"_id": ObjectId(comment_id)}) #https://www.mongodb.com/docs/manual/reference/method/db.collection.deleteOne/
+    return jsonify({"message": "Comment deleted"})
+
+
 
 if __name__ == '__main__':
     debug_mode = os.getenv('FLASK_ENV') != 'production'
