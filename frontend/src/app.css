@@ -329,3 +329,34 @@ border-bottom: transparent;
     background-color: #f9f9f9;
   }
 }
+
+/*comment area*/
+.sideComments {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 380px;
+  height: 100%;
+  background: white;
+  border-left: 1px solid #ccc;
+  padding: 1rem;
+  box-shadow: -2px 0 5px rgba(0,0,0,0.1);
+  overflow-y: auto;
+  z-index: 1000;
+}
+.closeBtn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 1.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.commentToggleBtn {
+  margin-top: 1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
