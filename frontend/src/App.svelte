@@ -151,7 +151,7 @@
     loading = false;
   }
   });
-
+//https://developers.google.com/identity/protocols/oauth2/javascript-implicit-flow
 function redirectToDexLogin() {
   const clientId = 'flask-app';
   const redirectUri = 'http://localhost:8000/auth/callback';
