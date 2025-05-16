@@ -139,13 +139,15 @@ body {
   text-decoration: underline;
 }
 .languageBar {
-  font-size: 0.7rem;
+  font-size: 1vw;
   display:flex;
   justify-content:space-between;
   align-content: flex-start ;
   margin-left: 12rem;
   margin-right: 12rem;
   min-width:260px;
+  white-space: nowrap;
+  
 }
 .languageBar p {
   margin-top: 0;
@@ -331,19 +333,6 @@ border-bottom: transparent;
 }
 
 /*comment area*/
-.sideComments {
-  position: fixed;
-  top: 0;
-  right: 0;
-  width: 380px;
-  height: 100%;
-  background: white;
-  border-left: 1px solid #ccc;
-  padding: 1rem;
-  box-shadow: -2px 0 5px rgba(0,0,0,0.1);
-  overflow-y: auto;
-  z-index: 1000;
-}
 .closeBtn {
   position: absolute;
   top: 1rem;
@@ -360,3 +349,176 @@ border-bottom: transparent;
   border: none;
   cursor: pointer;
 }
+
+/*Comment section CSS*/
+.sideComments {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 360px;
+  height: 100vh;
+  background-color: #fff;
+  border-left: 1px solid #ddd;
+  padding: 1rem;
+  overflow-y: auto;
+  z-index: 1000;
+  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
+}
+
+.sideComments h3 {
+  font-size: 1.25rem;
+  font-weight: 900;
+  margin-bottom: 1rem;
+}
+
+.CommentTitle {
+  text-align: left;
+  margin-left: 0;
+  padding-left: 0;
+  font-weight: 900;
+
+}
+
+.closeBtn {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.commentInput textarea {
+  width: 100%;
+  min-height: 60px;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.commentButtons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.commentButtons button {
+  background-color: #000;
+  color: white;
+  border: none;
+  padding: 0.3rem 0.6rem;
+  font-size: 0.8rem;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.commentList {
+  border-top: 1px solid #ddd;
+  padding-top: 1rem;
+}
+
+.comment {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #eee;
+  font-size: 0.9rem;
+  margin-left: 0;
+  padding-left: 0;
+  text-align: left;
+  font: Georgia;
+}
+
+.comment strong {
+  display: inline-block;
+  background-color: #f2f2f2;
+  padding: 0.25rem 0.5rem;
+  border-radius: 50%;
+  font-size: 0.85rem;
+  margin-right: 0.5rem;
+  text-transform: lowercase;
+}
+
+.replyList {
+  margin-left: 1.25rem;
+  padding-left: 0.75rem;
+  border-left: 2px solid #ddd;
+  margin-top: 0.5rem;
+}
+
+.reply {
+  font-size: 0.85rem;
+  margin-bottom: 0.3rem;
+  color: #333;
+}
+
+.replyList,
+.reply {
+  margin-left: 1rem;
+}
+
+.reply strong {
+  font-weight: 600;
+}
+
+.comment textarea {
+  width: 100%;
+  margin-top: 0.5rem;
+  padding: 0.4rem;
+  font-size: 0.85rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.comment button {
+  margin-top: 0.3rem;
+  font-size: 0.8rem;
+  background: #0066cc;
+  color: white;
+  border: none;
+  padding: 0.3rem 0.6rem;
+  border-radius: 3px;
+  cursor: pointer;
+}
+/*icon dropdown*/
+.accountWrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.accountIcon {
+  background: none;
+  border: blue solid 1px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.3rem;
+  border-radius: 50%;
+}
+
+.dropdownMenu {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  min-width: 100px;
+  box-shadow: 0 2px 10px rgba(255, 255, 255, 0.1);
+  z-index: 10;
+}
+
+.dropdownMenu button {
+  width: 100%;
+  padding: 8px 12px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+}
+
+.dropdownMenu button:hover {
+  background-color: #f0f0f0;
+}
+

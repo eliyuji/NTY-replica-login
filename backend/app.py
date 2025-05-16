@@ -24,10 +24,11 @@ DEX_TOKEN_URL = 'http://dex:5556/token'
 DEX_USERINFO_URL = 'http://dex:5556/userinfo'
 
 NYT_API_KEY = os.getenv("NYT_API_KEY")
+frontend_url = os.getenv("FRONTEND_URL")
 
 app = Flask(__name__, static_folder=static_path, template_folder=template_path)
 app.secret_key = secrets.token_hex(16)
-CORS(app, supports_credentials=True, resources={r"/*": {"origins": "http://localhost:5173"}})
+CORS(app, supports_credentials=True, resources={r"/*": {"origins": frontend_url}})
 
 @app.route('/api/key')
 def get_key():
@@ -73,7 +74,7 @@ def get_logged_in_user():
 @app.route("/logout")
 def logout():
     session.clear()
-    response = redirect("http://localhost:5173")
+    response = redirect(frontend_url)
     response.set_cookie('session', '', expires=0)
     return response
 
@@ -115,7 +116,7 @@ def auth_callback():
         userinfo = userinfo_resp.json()
         session['user'] = userinfo
 
-        return redirect("http://localhost:5173")
+        return redirect(frontend_url)
     except Exception as e:
         app.logger.exception("Error in /auth/callback")
         return f"error in callback", 500

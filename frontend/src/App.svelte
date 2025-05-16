@@ -130,7 +130,7 @@
     else if(i%3 == 1) c2.push(article)
     else if(i%3 == 2) c3.push(article)
   });
-  
+  //Sanity check to see if user is logged in or not
   const userRes = await fetch('http://localhost:8000/auth/user', {
   credentials: 'include'
     });
@@ -162,7 +162,14 @@ function redirectToDexLogin() {
 }
 function userLogout() {
   window.location.href = "http://localhost:8000/logout";
+  isLoggedIn = false;
+    showDropdown = false;
 }
+  let showDropdown = false;
+
+function toggleDropdown() {
+    showDropdown = !showDropdown;
+  }
 
 </script>
 
@@ -174,11 +181,19 @@ function userLogout() {
   <p>ESPANOL</p>
   <p>中文</p>
   {#if isLoggedIn}
-    <button class="loginButton" on:click={userLogout}>Logout</button>
+    <div class="accountWrapper">
+      <button class="accountIcon" aria-label="User Account" on:click={toggleDropdown} type="button">👤</button>
+      {#if showDropdown}
+        <div class="dropdownMenu">
+          <button on:click={userLogout}>Log Out</button>
+        </div>
+      {/if}
+    </div>
   {:else}
-    <button class="loginButton" on:click={redirectToDexLogin}>Login</button>
-  {/if}
- </div>
+  <button class="loginButton" on:click={redirectToDexLogin}>Login</button>
+  {/if}  
+</div>
+
 <header class="header">
   <div class="dateTime" id="dateTime">{new Date().toLocaleDateString()} 
     <p>Today's Paper</p>
@@ -280,11 +295,13 @@ function userLogout() {
         <button class="closeBtn" on:click={() => {
           if (commentShow !== null) toggleComments(commentShow);
         }}>X</button>
-        <h3>{catalog.find(n => n.url === commentShow)?.title || 'Comments'}
+        <h3 class= sideTitle>{catalog.find(n => n.url === commentShow)?.title || 'Comments'}
+        </h3>
+        <h2 class= "CommentTitle"> Comments
           {#if commentsMap[commentShow]}
             <span>({commentsMap[commentShow].length})</span>
           {/if}
-        </h3>
+        </h2>
 
         <div class="commentInput">
           {#if isLoggedIn}
