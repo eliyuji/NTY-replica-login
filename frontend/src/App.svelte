@@ -95,6 +95,16 @@
     await fetchComments(articleUrl);
   }
 
+  async function deleteReply(commentId: string, replyIndex: number) {
+    await fetch(`/api/comments/${commentId}/reply/${replyIndex}`, {
+      method: "DELETE"
+    });
+    if (commentShow) {
+      await fetchComments(commentShow);
+    }
+  }
+
+
 
 
   /*manually assigning articles into column for easier manipulation in different device modes*/
@@ -241,7 +251,14 @@ function toggleDropdown() {
             <button class="commentToggleBtn" on:click={() => isLoggedIn ? toggleComments(news.url) : redirectToDexLogin()}>
               💬
               {#if commentsMap[news.url]}
-                <span class="commentCount">{commentsMap[news.url].length}</span>
+                <span class="commentCount">
+                  {
+                    commentsMap[news.url].reduce(
+                      (acc, c) => acc + 1 + (c.replies?.length || 0),
+                      0
+                    )
+                  }
+                </span>
               {/if}
             </button>
           </article>
@@ -261,7 +278,14 @@ function toggleDropdown() {
               <button class="commentToggleBtn" on:click={() => isLoggedIn ? toggleComments(news.url) : redirectToDexLogin()}>
                 💬
                 {#if commentsMap[news.url]}
-                  <span class="commentCount">{commentsMap[news.url].length}</span>
+                  <span class="commentCount">
+                    {
+                      commentsMap[news.url].reduce(
+                        (acc, c) => acc + 1 + (c.replies?.length || 0),
+                        0
+                      )
+                    }
+                  </span>
                 {/if}
               </button>
             </article>
@@ -281,7 +305,14 @@ function toggleDropdown() {
               <button class="commentToggleBtn" on:click={() => isLoggedIn ? toggleComments(news.url) : redirectToDexLogin()}>
                 💬
                 {#if commentsMap[news.url]}
-                  <span class="commentCount">{commentsMap[news.url].length}</span>
+                  <span class="commentCount">
+                    {
+                      commentsMap[news.url].reduce(
+                        (acc, c) => acc + 1 + (c.replies?.length || 0),
+                        0
+                      )
+                    }
+                  </span>
                 {/if}
               </button>
             </article>
@@ -299,7 +330,14 @@ function toggleDropdown() {
         </h3>
         <h2 class= "CommentTitle"> Comments
           {#if commentsMap[commentShow]}
-            <span>({commentsMap[commentShow].length})</span>
+            <span>(
+              {
+                commentsMap[commentShow].reduce(
+                  (acc, c) => acc + 1 + (c.replies?.length || 0),
+                  0
+                )
+              }
+            )</span>
           {/if}
         </h2>
 
@@ -328,13 +366,16 @@ function toggleDropdown() {
         
                 <!-- reply list -->
                 {#if comment.replies?.length}
-                  <div class="replyList">
-                    {#each comment.replies as reply}
-                      <div class="reply">
-                        ↳ <strong>{reply.user.username}</strong>: {reply.content}
-                      </div>
-                    {/each}
-                  </div>
+                <div class="replyList">
+                  {#each comment.replies as reply, i}
+                    <div class="reply">
+                      ↳ <strong>{reply.user.username}</strong>: {reply.content}
+                      {#if isLoggedIn && (userInfo?.email?.startsWith('moderator') || userInfo?.email?.startsWith('admin'))}
+                        <button on:click={() => { if (commentShow !== null) deleteReply(comment._id, i); }}>delete</button>
+                      {/if}
+                    </div>
+                  {/each}
+                </div>
                 {/if}
         
                 <!-- reply input -->
