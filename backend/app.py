@@ -179,9 +179,42 @@ def delete_comment(comment_id):
     user = session.get("user")
     email = user.get("email", "")
     username = email.split("@")[0]
-    db.comments.delete_one({"_id": ObjectId(comment_id)}) #https://www.mongodb.com/docs/manual/reference/method/db.collection.deleteOne/
-    return jsonify({"message": "Comment deleted"})
+    role = username.upper()
+    try:
+        db.comments.update_one(
+            {"_id": ObjectId(comment_id)},
+            {"$set": {
+                "content": f"COMMENT REMOVED BY {role}!",
+                "edited": True
+            }}
+        )
+        return jsonify({"message": "Comment redacted"})
+    except Exception as e:
+        return jsonify({"error in Delete commment"}), 500
 
+
+@app.route("/api/comments/<comment_id>/reply/<int:reply_index>", methods=["DELETE"])
+def delete_reply(comment_id, reply_index):
+    user = session.get("user")
+    email = user.get("email", "")
+    username = email.split("@")[0]
+    try:
+        obj_id = ObjectId(comment_id)
+        comment = db.comments.find_one({"_id": obj_id})
+        replies = comment.get("replies", [])
+        replies[reply_index]["content"] = f"REPLY REMOVED BY {username.upper()}!"
+        replies[reply_index]["edited"] = True
+        replies[reply_index]["timestamp"] = datetime.now()
+
+        db.comments.update_one(
+            {"_id": obj_id},
+            {"$set": {"replies": replies}}
+        )
+        return jsonify({"message": "Reply edited"})
+
+    except Exception as e:
+        return jsonify({"error in Delete reply"}), 500
+    
 
 
 if __name__ == '__main__':
