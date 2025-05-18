@@ -28,6 +28,7 @@ frontend_url = os.getenv("FRONTEND_URL")
 
 app = Flask(__name__, static_folder=static_path, template_folder=template_path)
 app.secret_key = secrets.token_hex(16)
+#CourseAssist Debugged and Suggestion
 CORS(app, supports_credentials=True, resources={r"/*": {"origins": frontend_url}})
 
 @app.route('/api/key')
@@ -67,10 +68,12 @@ def get_logged_in_user():
     app.logger.debug(f"Session user: {user}")  # Log the session state
 
     # Explicitly check if the session is empty and return 401 if no user is logged in
+    #use this for unit testing
     if user is None:
         app.logger.debug("No user found in session.")
         return jsonify({"user": None}), 401
     return jsonify(user)
+    
 @app.route("/logout")
 def logout():
     session.clear()
@@ -84,10 +87,11 @@ def logout():
 @app.route("/auth/callback")
 def auth_callback():
     try:
+        #check if code returned by Dex (to exchange for access token)
         code = request.args.get("code")
         if not code:
             return "Missing Code", 400
-
+        #token request call to dex; parameters sourced from Dex documentation
         token_resp = requests.post(DEX_TOKEN_URL, data={
             'grant_type': 'authorization_code',
             'code': code,
@@ -97,25 +101,25 @@ def auth_callback():
         }, headers={
             'Content-Type': 'application/x-www-form-urlencoded'
         })
-
+        #Check if token request was successful
         if token_resp.status_code != 200:
             app.logger.error(f"Token response error: {token_resp.text}")
             return f"Failed to get token: {token_resp.text}", 500
 
         token_data = token_resp.json()
         access_token = token_data.get('access_token')
-
+        #check if the token response contains access_token
         if not access_token:
             return "No access token received", 500
 
         userinfo_resp = requests.get(DEX_USERINFO_URL, headers={
             'Authorization': f'Bearer {access_token}'
         })
-
+        #check if getting userinfo was successful 
         if userinfo_resp.status_code != 200:
             app.logger.error(f"Userinfo response error: {userinfo_resp.text}")
             return f"Failed to get user info: {userinfo_resp.text}", 500
-
+        #store it in flask
         userinfo = userinfo_resp.json()
         session['user'] = userinfo
 
