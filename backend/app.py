@@ -78,6 +78,9 @@ def logout():
     response.set_cookie('session', '', expires=0)
     return response
 
+#Written with help from CourseAssist
+#Referenced https://github.com/miguelgrinberg/flask-oauth-example/blob/main/app.py
+#Referenced https://realpython.com/flask-google-login/
 @app.route("/auth/callback")
 def auth_callback():
     try:

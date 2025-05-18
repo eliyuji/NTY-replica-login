@@ -1,3 +1,4 @@
+
 <script lang="ts">
 
   import { onMount } from 'svelte';
@@ -173,12 +174,12 @@ function redirectToDexLogin() {
 function userLogout() {
   window.location.href = "http://localhost:8000/logout";
   isLoggedIn = false;
-    showDropdown = false;
+  showSidebar = false;
 }
-  let showDropdown = false;
+  let showSidebar = false;
 
-function toggleDropdown() {
-    showDropdown = !showDropdown;
+function toggleSidebar() {
+    showSidebar = !showSidebar;
   }
 
 </script>
@@ -191,17 +192,21 @@ function toggleDropdown() {
   <p>ESPANOL</p>
   <p>中文</p>
   {#if isLoggedIn}
-    <div class="accountWrapper">
-      <button class="accountIcon" aria-label="User Account" on:click={toggleDropdown} type="button">👤</button>
-      {#if showDropdown}
-        <div class="dropdownMenu">
-          <button on:click={userLogout}>Log Out</button>
-        </div>
-      {/if}
+  <div class="accountWrapper">
+    <button class="accountIcon" on:click={toggleSidebar} type="button" aria-label="User Account">👤</button>
+    {#if showSidebar}
+  <aside class="sidebar" aria-label="User Sidebar">
+    <div class="sidebarContent">
+      <h1>My Account</h1>
+      <button class="closeButton" on:click={toggleSidebar}>✕</button>
     </div>
-  {:else}
+  </aside>
+  <button class="logoutFloatingButton" on:click={userLogout}>Log Out</button>
+{/if}
+  </div>
+{:else}
   <button class="loginButton" on:click={redirectToDexLogin}>Login</button>
-  {/if}  
+{/if}
 </div>
 
 <header class="header">

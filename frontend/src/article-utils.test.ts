@@ -60,7 +60,7 @@ describe('mappingDocsToArticles', () => {
         }
         return Promise.resolve({
           status: 200,//yes it worked
-          json: () => Promise.resolve({ apiKey: 'dummyKey', response: { docs: [] } }),
+          json: () => Promise.resolve({ apiKey: 'TesterKey', response: { docs: [] } }),
         });
       }));
   
@@ -81,7 +81,7 @@ describe('mappingDocsToArticles', () => {
         }
         return Promise.resolve({
           status: 200,
-          json: () => Promise.resolve({ apiKey: 'dummyKey', response: { docs: [] } }),
+          json: () => Promise.resolve({ apiKey: 'TesterKey', response: { docs: [] } }),
         });
       }));
   
