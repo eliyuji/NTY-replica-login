@@ -1,4 +1,3 @@
-
 <script lang="ts">
 
   import { onMount } from 'svelte';
@@ -37,7 +36,7 @@
   let loading = true;
   let isLoggedIn = false;
   let commentShow: string | null = null; 
-  let commentsMap: Record<string, Comment[]> = {}; 
+  let commentsMap: Record<string, Comment[]> = {};  // https://howtodoinjava.com/typescript/maps/
   let newComment = '';
   let replyMaps: Record<string, string> = {}; 
   let userInfo: any = null;
@@ -103,10 +102,7 @@
     if (commentShow) {
       await fetchComments(commentShow);
     }
-  }
-
-
-
+  } 
 
   /*manually assigning articles into column for easier manipulation in different device modes*/
   let c1: Article[] = [];
@@ -197,7 +193,7 @@ function toggleSidebar() {
     {#if showSidebar}
   <aside class="sidebar" aria-label="User Sidebar">
     <div class="sidebarContent">
-      <h1>My Account</h1>
+      <h2>My Account</h2>
       <button class="closeButton" on:click={toggleSidebar}>✕</button>
     </div>
   </aside>
@@ -251,7 +247,6 @@ function toggleSidebar() {
               <a href={news.url} target="_blank" rel="noopener noreferrer">{news.title}</a>
             </h2>
             <p class="aContent">{news.content}</p>
-
             <!-- comment button -->
             <button class="commentToggleBtn" on:click={() => isLoggedIn ? toggleComments(news.url) : redirectToDexLogin()}>
               💬
@@ -345,7 +340,6 @@ function toggleSidebar() {
             )</span>
           {/if}
         </h2>
-
         <div class="commentInput">
           {#if isLoggedIn}
             <textarea bind:value={newComment} placeholder="Share your thoughts..."></textarea>
@@ -382,7 +376,6 @@ function toggleSidebar() {
                   {/each}
                 </div>
                 {/if}
-        
                 <!-- reply input -->
                 {#if isLoggedIn}
                   <textarea

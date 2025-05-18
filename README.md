@@ -1,3 +1,7 @@
+# We record screenshots for demo. If the code setup got error, please check demo.pdf for all function. 
+
+
+
 ## How to Run Unit Testing Files: `test_app.py`, `myTest.cy.ts`,`article-utils.test.ts`, and `article-utils.ts` (isolation testing)
 To simply run the webpage, navigate to root of project file and run:
 ```
@@ -14,10 +18,13 @@ Navigate to the root dir of the project and run the following commands:
 ```
 pip install pytest
 cd backend
+pip install -r requirements.txt
 pytest
+
 ```
-The first test is to check when NYT_API_KEY is set, the API should return the correct key. 
-The second test is to check when NYT_API_KEY is not set, the API will not fail and it is still safe to return "apiKey" and that one  will be None or an empty string.
+The first test is API mock test.
+The second test is to check database comment insert and cleanup.
+The third test is to check API tests for comment + reply include both API
 
 Citation: 
 [pytest](https://docs.pytest.org/en/6.2.x/reference.html#pytest-fixture)

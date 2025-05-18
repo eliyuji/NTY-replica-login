@@ -6,8 +6,10 @@ import requests
 import logging
 import secrets
 from datetime import datetime
-from bson.objectid import ObjectId
+from bson.objectid import ObjectId # https://www.mongodb.com/docs/manual/reference/method/ObjectId/ to get id from mongo db
 
+from dotenv import load_dotenv
+load_dotenv(dotenv_path=".env.test") # for pytest env setup 
 
 static_path = os.getenv('STATIC_PATH','static')
 template_path = os.getenv('TEMPLATE_PATH','templates')
@@ -144,7 +146,6 @@ def post_comment():
     data = request.json
     email = user.get("email", "")
     username = email.split("@")[0]
-
     comment = {
         "article_url": data["article_url"],
         "user": {
@@ -156,10 +157,8 @@ def post_comment():
         "edited": False,
         "replies": []
     }
-
     result = db.comments.insert_one(comment) # https://www.mongodb.com/docs/manual/reference/method/db.collection.insertOne/
-    comment["_id"] = str(result.inserted_id) # 
-
+    comment["_id"] = str(result.inserted_id) 
     return jsonify(comment)
 
 
@@ -196,13 +195,12 @@ def delete_comment(comment_id):
                 "edited": True
             }}
         )
-        return jsonify({"message": "Comment redacted"})
+        return jsonify({"message": "comment edited"})
     except Exception as e:
         return jsonify({"error in Delete commment"}), 500
 
-
-@app.route("/api/comments/<comment_id>/reply/<int:reply_index>", methods=["DELETE"])
-def delete_reply(comment_id, reply_index):
+@app.route("/api/comments/<comment_id>/reply/<int:replyindex>", methods=["DELETE"])
+def delete_reply(comment_id, replyindex):
     user = session.get("user")
     email = user.get("email", "")
     username = email.split("@")[0]
@@ -210,20 +208,16 @@ def delete_reply(comment_id, reply_index):
         obj_id = ObjectId(comment_id)
         comment = db.comments.find_one({"_id": obj_id})
         replies = comment.get("replies", [])
-        replies[reply_index]["content"] = f"REPLY REMOVED BY {username.upper()}!"
-        replies[reply_index]["edited"] = True
-        replies[reply_index]["timestamp"] = datetime.now()
-
+        replies[replyindex]["content"] = f"REPLY REMOVED BY {username.upper()}!"
+        replies[replyindex]["edited"] = True
+        replies[replyindex]["timestamp"] = datetime.now()
         db.comments.update_one(
             {"_id": obj_id},
             {"$set": {"replies": replies}}
         )
         return jsonify({"message": "Reply edited"})
-
     except Exception as e:
         return jsonify({"error in Delete reply"}), 500
-    
-
 
 if __name__ == '__main__':
     debug_mode = os.getenv('FLASK_ENV') != 'production'

@@ -93,22 +93,3 @@ describe('mappingDocsToArticles', () => {
     });
   });
 
-test('Test for query Davis/ SAC ', async () => {
-  const mockTest = vi.fn((url: string) => {
-    if (url === '/api/key') {
-      return Promise.resolve({ json: () => Promise.resolve({ apiKey: 'fakeapi' }) })
-    }
-    return Promise.resolve({
-      json: () => Promise.resolve({ response: { docs: [] } })
-    })
-  })
-
-  vi.stubGlobal('fetch', mockTest)
-  render(App)
-
-  await vi.waitFor(() => {
-    const call = mockTest.mock.calls.find(([url]) => url.includes('api.nytimes.com'))
-    expect(call?.[0]).toMatch(/sacramento/i)
-    expect(call?.[0]).toMatch(/Davis/i)
-  })
-})

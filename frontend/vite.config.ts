@@ -9,6 +9,7 @@ export default defineConfig(({ mode }) => ({
     environment: 'jsdom', 
     setupFiles: ['./src/setupTests.ts'],
   },
+  //reference for debugging fix https://github.com/sveltejs/svelte/issues/11394
   resolve: mode === 'test' ? {
     conditions: ['browser'],
   } : {},
