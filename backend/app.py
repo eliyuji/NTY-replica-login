@@ -84,6 +84,7 @@ def logout():
 #Written with help from CourseAssist
 #Referenced https://github.com/miguelgrinberg/flask-oauth-example/blob/main/app.py
 #Referenced https://realpython.com/flask-google-login/
+#Referenced https://openid.net/developers/how-connect-works/
 @app.route("/auth/callback")
 def auth_callback():
     try:
